@@ -1,4 +1,4 @@
-# Basic WiFi Configuration
+# Basic WiFi Configuration to connect to LAN
 
 # The MIT License (MIT)
 #
