@@ -13,7 +13,7 @@ fc = cv2.CascadeClassifier(cfp)
 data = pickle.loads(open('face_enc', "rb").read())
 
 # Find the path to the image you want to detect a face and pass it here
-image = cv2.imread('AGC_20231222_195902284.MV.jpg')
+image = cv2.imread('test_img3.jpg')
 rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 # Convert the image to greyscale for HaarCascade
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -49,10 +49,11 @@ for encoding in encodings:
     print(names)
 
 # Loop over the recognized faces
-for ((x, y, w, h), name) in zip(faces, names):
-    # Rescale the face coordinates
-    # Draw the predicted face name on the image
-    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    cv2.putText(image, name, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
-    cv2.imshow("Frame", image)
-    cv2.waitKey(0)
+# for ((x, y, w, h), name) in zip(faces, names):
+#     # Rescale the face coordinates
+#     # Draw the predicted face name on the image
+#     cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+#     cv2.putText(image, name, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+#     cv2.imshow("Frame", image)
+#     cv2.waitKey(0)
+# 
