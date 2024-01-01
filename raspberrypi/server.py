@@ -4,7 +4,8 @@
 import socket
 import struct
 
-HOST = "192.168.0.18"  # Standard loopback interface address (localhost)
+# ENTER 192.168.0.18 FOR RASPBERRY PI
+HOST = "192.168.0.16"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 def getPassword():
@@ -21,8 +22,8 @@ def getPassword():
                     break
                 conn.sendall(bytes("PW Received!", 'utf-8'))    # Send response to ESP32Cam
                 print(f"Received", data.decode())               # Decode the password received
-                conn.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('ii', 1, 0))
-                conn.close()
+                # conn.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('ii', 1, 0))
+                # conn.close()
                 s.close()            # Close connection
               
                 return data.decode(), addr    # Returns the Password and [IP Address, Port No]

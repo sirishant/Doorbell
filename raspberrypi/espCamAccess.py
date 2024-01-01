@@ -8,25 +8,37 @@ import time
 import server
 import urllib.request
 
-def accessCam():
-        pw, conf = server.getPassword()
-        addr, _ = conf
-        time.sleep(.5)
-        login = requests.get(f"http://{addr}/login/{pw}")
-        time.sleep(.5)
+def getCreds():
+    pw, conf = server.getPassword()
+    addr, _ = conf
+    time.sleep(.5)
+    return (addr, pw)
 
+def accessCam(addr, pw):
+        print("Trying to log in accessCam...")
+        #time.sleep(.5)
+        login = requests.get(f"http://{addr}/login/{pw}")
+        print("Logged in! Geting images..")
         for i in range(5):
                 response = requests.get(f"http://{addr}/foto")
                 img = BytesIO(response.content)
 
                 with open(f"output{i}.jpeg", "wb") as f:
                         f.write(img.getbuffer())
+                
+                # Rotate image
+                im = Image.open(f"output{i}.jpeg")
+                im = im.rotate(270, expand=True)
+                im.save(f'output{i}.jpeg')
 
-                time.sleep(1)
+                time.sleep(.25)
 
-        print("hellooooooooooo")
-        try:
-                verify = urllib.request.urlopen(url=f"http://{addr}/verify")
-                return
-        except Exception:
-                return
+def openLock(addr, pw):
+    login = requests.get(f"http://{addr}/login/{pw}")
+    time.sleep(.5)
+    try:
+        verify = urllib.request.urlopen(url=f"http://{addr}/verify")
+        return
+    except Exception:
+        return
+
