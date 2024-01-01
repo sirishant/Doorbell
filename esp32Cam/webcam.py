@@ -44,7 +44,8 @@ gc.enable() # Enable automatic garbage collection
 auth=site.auth
 pwd=site.pwd
 
-HOST = "192.168.0.18" # Server address
+# ENTER 192.168.0.18 FOR RASPBERRY PI
+HOST = "192.168.0.16" # Server address
 PORT = 65432
 
 def clean_up(cs):
@@ -174,9 +175,9 @@ def main():
        s.setsockopt(soc.SOL_SOCKET, soc.SO_REUSEADDR, 1)
        s.connect((HOST, PORT))
        s.sendall(bytes(auth.pwd, 'utf-8'))
-       data = s.recv(1024)
+       # data = s.recv(1024)
        s.close()
-       print(f"{data!r}")
+       # print(f"{data!r}")
     
     # set preffered camera setting
     camera.framesize(10)     # frame size 800X600 (1.33 espect ratio)
