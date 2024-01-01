@@ -18,6 +18,7 @@ for (i, ip) in enumerate(imagePath):
     # load the input image and convert it from BGR
     image = cv2.imread(ip)
     rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     boxes = face_recognition.face_locations(rgb, model='hog')
 
@@ -35,3 +36,4 @@ data = {"encodings": kEncodings, "names": kNames}
 # use pickle to save data into a file for later use
 with open("face_enc", "wb") as f:
     f.write(pickle.dumps(data))  # to open the file in write mode
+
