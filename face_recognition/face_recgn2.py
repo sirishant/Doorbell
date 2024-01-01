@@ -4,33 +4,41 @@ import pickle
 import cv2
 import os
 
-cfp = os.path.dirname(cv2.__file__) + "/data/haarcascade_frontalface_alt2.xml"
-fc = cv2.CascadeClassifier(cfp)
-data = pickle.loads(open('face_enc', "rb").read())
+def checkImg():
+    cfp = os.path.dirname(cv2.__file__) + "/data/haarcascade_frontalface_alt2.xml"
+    fc = cv2.CascadeClassifier(cfp)
+    data = pickle.loads(open('face_enc', "rb").read())
 
-image = cv2.imread('test_img12.jpg')
-rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-faces = fc.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=6, minSize=(60, 60), flags=cv2.CASCADE_SCALE_IMAGE)
+    names = {}
+    for name in data["names"]: # Set initial confidences as 0
+        names[name] = 0
+        names['Unknown'] = 0
+    
+    #for i in range(12): # 12 images
+    image = cv2.imread(f"test_img2.jpg") # Check test_img0, 1, 2 etc
+    rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    faces = fc.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=6, minSize=(60, 60), flags=cv2.CASCADE_SCALE_IMAGE)
 
-encodings = face_recognition.face_encodings(rgb)
-names = []
+    encodings = face_recognition.face_encodings(rgb)
 
-for encoding in encodings:
-    matches = face_recognition.compare_faces(data["encodings"], encoding)
-    name = "Unknown"
-    confidence = 0
+    for encoding in encodings:
+        matches = face_recognition.compare_faces(data["encodings"], encoding)
+        name = "Unknown"
+        confidence = 0
 
-    if True in matches:
-        face_distances = face_recognition.face_distance(data["encodings"], encoding)
-        best_match_index = matches.index(True)
-        confidence = (1 - face_distances[best_match_index]) * 100
+        if True in matches:
+            face_distances = face_recognition.face_distance(data["encodings"], encoding)
+            best_match_index = matches.index(True)
+            confidence = 2 * (1 - face_distances[best_match_index]) * 100
 
-        if confidence > 45:
-            name = data["names"][best_match_index]
+            if confidence > 90:
+                name = data["names"][best_match_index]
 
-    names.append((name, confidence*2))
+        names[name] += confidence
+        
     print(names)
+    return names        
 
 # Define a function to display the image with rectangles
 def display_image(image, faces, names):
@@ -49,3 +57,8 @@ def display_image(image, faces, names):
 
 # Call the function to display the image after processing all faces
 # display_image(image.copy(), faces, names)
+
+if __name__ == '__main__':
+    checkImg()
+
+
