@@ -36,12 +36,18 @@ import main
 import servoControl
 import time
 import machine
+import camera
+import socket
+import usocket as soc
+
+# ENTER 192.168.0.18 FOR RASPBERRY PI
+HOST = "192.168.0.20" # Server address
+PORT = 65432
 
 # Init global variables
 rot='0'
 flash_light=Pin(04,Pin.OUT)
 count=0
-
 class auth: pass
 
 server=''
@@ -106,11 +112,28 @@ def login(cs,v):
 
 @route('/logout')
 def logout(cs,v):
-   if auth.on:
-      auth.pwd=pwd()
-      auth.ip=''
-      print(f'New PWD: {auth.pwd}')
-   OK(cs)
+    time.sleep(2)
+    print("logout happening..")
+    cs.write(b'\r\n')
+    cs.setblocking(True)
+    cs.write(b'%s\r\n\r\n' % hdr['pic'])
+    cs.write(camera.capture())
+    cs.write(b'\r\n')  # send and flush the send buffer
+    OK(cs)
+#     camera.deinit()
+#     return machine.reset()
+#    if auth.on:
+#       auth.pwd=pwd()
+#       auth.ip=''
+#       print(f'New PWD: {auth.pwd}')
+#       s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#       s.setsockopt(soc.SOL_SOCKET, soc.SO_REUSEADDR, 1)
+#       s.connect((HOST, PORT))
+#       s.sendall(bytes(auth.pwd, 'utf-8'))
+#       ## data = s.recv(1024)
+#       s.close()
+#       ## print(f"{data!r}")
+#    OK(cs)
 
 @route('/favicon.ico')
 def fav(cs,v):
@@ -163,14 +186,15 @@ def foto(cs,v): # still photo
     #flash	# turn flash on
     global count
     if count>3:		# returns 3 photos
-        flash_light.value(0)
+        flashlightOff()
         # main.main()
-    flash_light.value(1)
+    flashlightOn()
     cs.setblocking(True)
     cs.write(b'%s\r\n\r\n' % hdr['pic'])
     cs.write(camera.capture())
     cs.write(b'\r\n')  # send and flush the send buffer
     count+=1
+    flashlightOff()
 
         #nc=cs.write(b'%s\r\n\r\n' % (hdr['pix']%ln)+buf)
         #count += 1
@@ -179,16 +203,22 @@ def foto(cs,v): # still photo
     
 @route('/verify')
 def verify(cs,v): # actuate servo
-    flash_light.value(0)
+    flashlightOff()
     servoControl.mov(180)
     time.sleep(2)
     print("verify happened..")
     cs.write(b'\r\n')
     cs.setblocking(True)
     cs.write(b'%s\r\n\r\n' % hdr['pic'])
-    cs.write(camera.capture())
     cs.write(b'\r\n')  # send and flush the send buffer
-    return machine.reset()
+#     camera.deinit()
+#     return machine.reset()
+
+def flashlightOn():
+    flash_light.value(1)
+    
+def flashlightOff():
+    flash_light.value(0)
     
     
 @route('/boto')
