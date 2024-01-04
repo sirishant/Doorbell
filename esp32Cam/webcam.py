@@ -27,6 +27,7 @@
 # webcam.py MVC - This is the controller C of MVC
 
 from machine import reset
+from machine import Pin
 from time import sleep
 import usocket as soc
 import gc
@@ -44,8 +45,11 @@ gc.enable() # Enable automatic garbage collection
 auth=site.auth
 pwd=site.pwd
 
-HOST = "192.168.0.18" # Server address
+# ENTER 192.168.0.18 FOR RASPBERRY PI
+HOST = "192.168.0.20" # Server address
 PORT = 65432
+
+pin_button = Pin(12, mode=Pin.IN, pull=Pin.PULL_UP)
 
 def clean_up(cs):
    cs.close() # flash buffer and close socket
@@ -82,6 +86,22 @@ def route(pm):
    clean_up(cs)
 
 def server(pm):
+  print("Waiting for button press..")
+  sleep(1)
+  while(1):
+        if pin_button.value() != 1:
+            print("Button pushed down!")
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.setsockopt(soc.SOL_SOCKET, soc.SO_REUSEADDR, 1)
+            s.connect((HOST, PORT))
+            sleep(1)
+            s.sendall(bytes('DINGDONG', 'utf-8'))
+            ## data = s.recv(1024)
+            s.close()
+            ## print(f"{data!r}")
+            # sleep(1)
+            print("Welcome to Webcam")
+            break
   p=pm[0]
   ss=soc.socket(soc.AF_INET, soc.SOCK_STREAM)
   ss.setsockopt(soc.SOL_SOCKET, soc.SO_REUSEADDR, 1)
@@ -94,9 +114,9 @@ def server(pm):
   else:
      print(f"Try - http://{site.server}")
   while True:
-     ms='';rq=[]
+     ms='';rq=[]     
      try:
-        cs, ca = ss.accept()
+        cs, ca = ss.accept() 
      except:
         pass
      else:
@@ -174,9 +194,9 @@ def main():
        s.setsockopt(soc.SOL_SOCKET, soc.SO_REUSEADDR, 1)
        s.connect((HOST, PORT))
        s.sendall(bytes(auth.pwd, 'utf-8'))
-       data = s.recv(1024)
+       ## data = s.recv(1024)
        s.close()
-       print(f"{data!r}")
+       ## print(f"{data!r}")
     
     # set preffered camera setting
     camera.framesize(10)     # frame size 800X600 (1.33 espect ratio)
@@ -200,6 +220,7 @@ def main():
     
     server((80,))  # port 80
     #reset()
+    site.flashlightOff()
     main.main()
     
 if __name__ == '__main__':
