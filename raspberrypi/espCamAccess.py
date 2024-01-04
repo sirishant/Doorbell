@@ -7,12 +7,16 @@ from io import BytesIO
 import time
 import server
 import urllib.request
+# import socket
 
 def getCreds():
     pw, conf = server.getPassword()
     addr, _ = conf
     time.sleep(.5)
     return (addr, pw)
+
+def readLine():
+    return server.getLine()
 
 def accessCam(addr, pw):
         print("Trying to log in accessCam...")
@@ -38,7 +42,14 @@ def openLock(addr, pw):
     time.sleep(.5)
     try:
         verify = urllib.request.urlopen(url=f"http://{addr}/verify")
-        return
     except Exception:
         return
+    return
 
+def logout(addr):
+    try:
+        logout = requests.get(f"http://{addr}/logout")
+        time.sleep(.25)
+    except Exception:
+        return
+    return
