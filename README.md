@@ -1,14 +1,18 @@
 # RaspberryPi - ESP32Cam Communications
 
-#### Problem Statement
+#### This document is concerned only with ESP32Cam-RPi communication.<br>
+- For more info on RaspberryPi Processing, [refer here](/raspberrypi/README.md).
+- For more info on ESP32Cam Processing, [refer here](/esp32Cam/README.md).
+
+### Problem Statement
 > Have a method to accept incoming communications from an ESP32Cam,
 > and process information to manipulate the ESP32Cam accordingly.
 
-#### Goals
+### Goals
 > Bind the ESP32Cam and access images to run facial recognition and
 > authenticate the system accordingly.
 
-#### Non-Goals
+### Non-Goals
 > Actual dispensing of the machine, interaction with ESP32 non-cams of
 > any machine, actual working of ESPCam.
 
