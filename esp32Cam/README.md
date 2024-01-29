@@ -25,3 +25,9 @@
 
 ### High-Level Sequence Diagram
 ![ESP32Cam functions Sequence Diagram](/assets/ESP32Cam-Sequence_Diagram.png)
+
+### Risks
+> Inconsistent server startup, server resets after every logout.
+
+### Alternative Solutions
+> Using IR Camera instead of RGB, use different platform instead of ESPCam.
