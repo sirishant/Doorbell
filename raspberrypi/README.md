@@ -13,3 +13,10 @@
 
 ### High-Level Sequence Diagram
 ![Sequence Diagram of RaspberryPi functions](/assets/RPi-Sequence_Diagram.png)
+
+### Risks
+> Wrongful recognition, recognition when shown a static picture (phone or printout),
+> network errors.
+
+### Alternative Solutions
+> Using nVidia Jetson.
